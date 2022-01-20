@@ -41,6 +41,19 @@ router.post('/',async (req, res)=>{
 //METODO PATCH ACTUALIZAR, IGUALMENTE SE USA UN BODY
 
 router.patch('/:id',async (req, res) =>{
+  try {
+    const {id}=req.params;
+  const body=req.body;
+  const product=await service.update(id, body);
+  res.json(product);
+  } catch (error) {
+    res.status(404).json({
+      message: error.message
+    });
+  }
+
+
+
   //Necesita recibir un id
   const {id}=req.params;
   const body=req.body;
