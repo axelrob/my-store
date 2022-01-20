@@ -12,9 +12,9 @@ const service = new ProductsService();
 
 
 
-router.get('/', (req, res)=>{
+router.get('/', async (req, res)=>{
  // Tenemos la lista de producto y la vamos a obtener del servicio
- const products=service.find();
+ const products=await service.find();
   res.json(products)
 });
 
@@ -22,29 +22,29 @@ router.get('/filter', (req, res)=>{
   res.send('Este es un filter')
 })
 
-router.get('/:id', (req, res)=>{
+router.get('/:id',async (req, res)=>{
   const {id} =req.params;
-  const product=service.findOne(id);
+  const product= await service.findOne(id);
   res.json(product);
 
 });
 
 //METODO POST siempre viene en un atributo llamado body
 
-router.post('/', (req, res)=>{
+router.post('/',async (req, res)=>{
   const body=req.body;
-  const newProduct=service.create(body);
+  const newProduct=await service.create(body);
   //haciendo un response dinamico con un json
   res.status(201).json(newProduct);
 })
 
 //METODO PATCH ACTUALIZAR, IGUALMENTE SE USA UN BODY
 
-router.patch('/:id', (req, res) =>{
+router.patch('/:id',async (req, res) =>{
   //Necesita recibir un id
   const {id}=req.params;
   const body=req.body;
-  const product=service.update(id, body);
+  const product=await service.update(id, body);
   res.json(product);
 });
 
@@ -64,10 +64,10 @@ router.put('/:id', (req, res) =>{
 
 //METODO delete lleva el mismo codigo que los anteriores
 // no tiene body
-router.delete('/:id', (req, res) =>{
+router.delete('/:id', async (req, res) =>{
   //Necesita recibir un id
   const {id}=req.params;
-  const rta=service.delete(id);
+  const rta=await service.delete(id);
   res.json(rta);
 });
 

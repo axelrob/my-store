@@ -5,7 +5,7 @@ class ProductsService {
 
 //Constructor que va a manejar una fuente de datos en memoria
 
-constructor( ){
+constructor(){
   this.products=[];
   // se van a generar los 20 productos llevando al constructor
   this.generate();
@@ -25,7 +25,7 @@ generate(){
 }
 
 
-create(data){
+async create(data){
   const newProduct={
     id: faker.datatype.uuid(),
     ...data
@@ -34,26 +34,31 @@ create(data){
   return newProduct;
 }
 
-find(){
+async find(){
 // Para el find se realiza un return del array
-
+// Se realiza una Promesa
+  return new Promise((resolve, reject)=> {
+    setTimeout(()=>{
+      resolve(this.products);
+    }, 5000);
+  })
 return this.products;
 
 }
 
-findOne(id){
+async findOne(id){
 return this.products.find(item => item.id === id);
 
 }
 
-update(id, changes){
+async update(id, changes){
 // Vamos a retornar la posicion del arreglo
 const index=this.products.findIndex(item => item.id===id);
 if(index=== -1){
   throw new Error('product not found');
 }
-// EN LA POSICION DEL OBJETO PLIQUE LOS CAMBIOS
-const products=this.products[index];
+// EN LA POSICION DEL OBJETO APLIQUE LOS CAMBIOS
+const product=this.products[index];
 this.products[index]={
   ...product,
   ...changes
@@ -62,7 +67,7 @@ return this.products[index];
 
 }
 
-delete(id){
+async delete(id){
   const index=this.products.findIndex(item => item.id===id);
   if(index=== -1){
     throw new Error('product not found');
