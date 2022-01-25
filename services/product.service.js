@@ -1,5 +1,5 @@
 const faker=require('faker');
-
+const boom= require('@hapi/boom');
 
 class ProductsService {
 
@@ -47,15 +47,19 @@ return this.products;
 }
 
 async findOne(id){
-return this.products.find(item => item.id === id);
-
+  //const name=this.getTotal() para el ejemplo de midd;
+const product= this.products.find(item => item.id === id);
+if(!product){
+  throw boom.notFound('Product nof found');
+}
+  return product;
 }
 
 async update(id, changes){
 // Vamos a retornar la posicion del arreglo
 const index=this.products.findIndex(item => item.id===id);
 if(index=== -1){
-  throw new Error('product not found');
+  throw boom.notFound('Product not found');
 }
 // EN LA POSICION DEL OBJETO APLIQUE LOS CAMBIOS
 const product=this.products[index];
@@ -70,7 +74,7 @@ return this.products[index];
 async delete(id){
   const index=this.products.findIndex(item => item.id===id);
   if(index=== -1){
-    throw new Error('product not found');
+    throw boom.notFound('Product not found');
   }// Splice permite enviar una posicion para poder eliminar esa posicion
   this.products.splice(index, 1);
   return {id};
