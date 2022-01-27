@@ -1,4 +1,5 @@
 const express=require('express');
+const cors=require('cors');
 
 //Importar los modulos routes
 const routerApi=require('./routes');
@@ -11,6 +12,22 @@ const app=express();
 const port=12000;
 
 app.use(express.json());
+
+//Vamos a permitir el acceso a api a estos domnios
+const whiteList = ['http://localhost:5500', 'https://myapp.ec'];
+const options = {
+  origin: ()=> {
+    if(whiteList.includes(origin)){
+      callback(null, true);
+    } else {
+      callback(new Error('no permintido'));
+    }
+  }
+}
+
+//usar la libreria cors que funciona como un middeleware
+app.use(cors());
+
 
 app.get('/', (req, res)=>{
   res.send('A darle');

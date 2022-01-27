@@ -3,6 +3,12 @@ const res = require('express/lib/response');
 
 // Se realiza la improtacion de nuestro servicios
 const ProductsService=require('./../services/product.service');
+// Vamos a importar desde middleware el validator handler
+const validatorHandler = require('./../middlewares/validator.handler');
+// nos traemos los schemas
+const {createProductSchema, updateProductSchema, getProductSchema}= require('./../schemas/product.schema');
+
+
 //Necesitamos un router para poder usar las rutas en diferentes archivos
 const router= express.Router();
 
@@ -22,7 +28,9 @@ router.get('/filter', (req, res)=>{
   res.send('Este es un filter')
 })
 
-router.get('/:id',async (req, res, next)=>{
+router.get('/:id',
+validatorHandler(getProductSchema, 'params'),
+  async (req, res, next)=>{
   try {
     const {id} =req.params;
     const product= await service.findOne(id);
@@ -35,7 +43,9 @@ router.get('/:id',async (req, res, next)=>{
 
 //METODO POST siempre viene en un atributo llamado body
 
-router.post('/',async (req, res)=>{
+router.post('/',
+validatorHandler(createProductSchema, 'body'),
+  async (req, res)=>{
   const body=req.body;
   const newProduct=await service.create(body);
   //haciendo un response dinamico con un json
@@ -44,7 +54,11 @@ router.post('/',async (req, res)=>{
 
 //METODO PATCH ACTUALIZAR, IGUALMENTE SE USA UN BODY
 
-router.patch('/:id',async (req, res, next) =>{
+router.patch('/:id',
+validatorHandler(getProductSchema, 'params'),
+validatorHandler(updateProductSchema, 'body'),
+
+  async (req, res, next) =>{
   try {
     const {id}=req.params;
   const body=req.body;
