@@ -17,7 +17,7 @@ app.use(express.json());
 const whiteList = ['http://localhost:5500', 'https://myapp.ec'];
 const options = {
   origin: ()=> {
-    if(whiteList.includes(origin)){
+    if(whiteList.includes(origin) || !origin){
       callback(null, true);
     } else {
       callback(new Error('no permintido'));
