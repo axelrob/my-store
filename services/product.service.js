@@ -2,6 +2,11 @@ const faker=require('faker');
 const boom= require('@hapi/boom');
 const pool= require('../libs/postgres.pool');
 
+// Nos traemos a sequelize
+
+const sequelize= require('../libs/sequelize');
+
+
 class ProductsService {
 
 //Constructor que va a manejar una fuente de datos en memoria
@@ -10,10 +15,10 @@ constructor(){
   this.products=[];
   // se van a generar los 20 productos llevando al constructor
   this.generate();
-// LE DECIMOS AL CONSTRUCTOR QUE QUEREMOS UN POOL
+/*// LE DECIMOS AL CONSTRUCTOR QUE QUEREMOS UN POOL
   this.pool=pool;
   // por si hya errores en la conexion
-  this.pool.on('error', (err)=> console.error(err));
+  this.pool.on('error', (err)=> console.error(err));*/
 }
 // Metodo para generar todos los productos
 
@@ -39,14 +44,26 @@ async create(data){
   return newProduct;
 }
 
-async find(){ // haciendo find con un pool
+/*async find(){ // haciendo find con un pool
   const query = 'SELECT * FROM tasks';
   const rta= await this.pool.query(query);
   return rta.rows;
 
 //return this.products;
 
-}
+}*/
+
+async find(){ // haciendo find con un pool
+  const query = 'SELECT * FROM tasks';
+  const [data]= await sequelize.query(query);
+  return data;
+
+//return this.products;
+
+};
+
+
+
 
 async findOne(id){
   //const name=this.getTotal() para el ejemplo de midd;
