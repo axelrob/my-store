@@ -1,5 +1,6 @@
 const faker=require('faker');
 const boom= require('@hapi/boom');
+const pool= require('../libs/postgres.pool');
 
 class ProductsService {
 
@@ -9,6 +10,10 @@ constructor(){
   this.products=[];
   // se van a generar los 20 productos llevando al constructor
   this.generate();
+// LE DECIMOS AL CONSTRUCTOR QUE QUEREMOS UN POOL
+  this.pool=pool;
+  // por si hya errores en la conexion
+  this.pool.on('error', (err)=> console.error(err));
 }
 // Metodo para generar todos los productos
 
@@ -34,15 +39,12 @@ async create(data){
   return newProduct;
 }
 
-async find(){
-// Para el find se realiza un return del array
-// Se realiza una Promesa
-  return new Promise((resolve, reject)=> {
-    setTimeout(()=>{
-      resolve(this.products);
-    }, 5000);
-  })
-return this.products;
+async find(){ // haciendo find con un pool
+  const query = 'SELECT * FROM tasks';
+  const rta= await this.pool.query(query);
+  return rta.rows;
+
+//return this.products;
 
 }
 
